@@ -1,4 +1,6 @@
+import { Clerk } from "@clerk/clerk-js";
 declare global {
+    Clerk = Clerk
     interface PaymentMethod {
         methodId: string;
         type: string;
