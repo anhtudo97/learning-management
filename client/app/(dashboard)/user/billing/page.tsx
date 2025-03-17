@@ -19,7 +19,7 @@ import {
 import { formatPrice } from "@/lib/utils";
 import { useGetTransactionsQuery } from "@/state/api";
 import { useUser } from "@clerk/nextjs";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 const UserBilling = () => {
     const [paymentType, setPaymentType] = useState("all");
@@ -29,12 +29,13 @@ const UserBilling = () => {
             skip: !isLoaded || !user,
         });
 
-    const filteredData =
-        transactions?.filter((transaction) => {
+    const filteredData = useMemo(() => {
+        return transactions?.filter((transaction) => {
             const matchesTypes =
                 paymentType === "all" || transaction.paymentProvider === paymentType;
             return matchesTypes;
         }) || [];
+    }, [paymentType, transactions]);
 
     if (!isLoaded) return <Loading />;
     if (!user) return <div>Please sign in to view your billing information.</div>;
